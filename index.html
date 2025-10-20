@@ -22,7 +22,7 @@
             background-color: white; 
             padding: 40px 50px; 
             border-radius: 12px; 
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1); /* 阴影效果增强 */
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
             border: 1px solid #e0e0e0; 
             width: 100%; 
             max-width: 1100px;
@@ -76,19 +76,12 @@
         .logo-area {
             display: flex;
             align-items: center;
-	    justify-content: center; /* 新增：使内容居中 */
-            width: 100%; /* 新增：确保占据整个宽度 */
+            justify-content: center;
+            width: 100%;
         }
         
         .logo-area img {
             max-width: 140px;
-        }
-        
-        .logo-text {
-            font-size: 1.8em;
-            font-weight: bold;
-            color: #172b4d;
-	    text-align: center; /* 新增：确保文本居中 */
         }
         
         .judge-content {
@@ -166,13 +159,6 @@
             padding: 20px;
         }
         
-        .judgment-title {
-            font-size: 1.3em;
-            font-weight: bold;
-            margin-bottom: 15px;
-            color: #333;
-        }
-        
         .judgment-result {
             font-size: 1.1em;
             line-height: 1.6;
@@ -247,9 +233,30 @@
         .back-button:hover {
             background-color: #545b62;
         }
+        
+        /* 提示信息样式 */
+        .notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 5px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1000;
+            display: none;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
+    <!-- 提示信息 -->
+    <div class="notification" id="notification">
+        体验已完成！感谢您使用DeepTruth系统
+    </div>
+
     <!-- 欢迎页面 -->
     <div class="container welcome-page" id="welcomePage">
         <div class="logo">
@@ -326,6 +333,7 @@
             const backButton = document.getElementById('backButton');
             const nextButton = document.getElementById('nextButton');
             const newsImageContainer = document.getElementById('newsImageContainer');
+            const notification = document.getElementById('notification');
             
             // 新闻判断页面元素
             const newsNumber = document.getElementById('newsNumber');
@@ -343,7 +351,13 @@
                     source: "Jill Kiedaisch",
                     time: "37分钟前",
                     isTrue: false,
-                    image: "image1.png"
+                    image: "image1.png",
+                    reasoning: [
+                        "首先，新闻故事是由算法编写和传播的。",
+                        "其次，本文中的引用无法核实。",
+                        "且图片无法通过反向搜索进行验证。",
+                        "最后，这个新闻故事的内容与其他新闻来源不一致，故判断为假。"
+                    ]
                 },
                 {
                     id: 2,
@@ -351,7 +365,13 @@
                     source: "Lena Morozov",
                     time: "18分钟前",
                     isTrue: false,
-                    image: "image2.png"
+                    image: "image2.png",
+                    reasoning: [
+                        "首先，从其他来源找不到同一问题的报道。",
+                        "其次，它的写作风格不坚持新闻写作的专业风格。",
+                        "再者，在网上找不到关于作者的任何信息。",
+                        "最后，文章中有多个标点、拼写和语法错误，故判断为假。"
+                    ]
                 },
                 {
                     id: 3,
@@ -359,7 +379,13 @@
                     source: "Clara Nguyen",
                     time: "27分钟前",
                     isTrue: true,
-                    image: "image3.png"
+                    image: "image3.png",
+                    reasoning: [
+                        "首先，作者是经过验证的专业新闻记者。",
+                        "其次，文中引用的数据可在官方统计年鉴或机构报告中查到。",
+                        "再者，配图经过反向搜索，确实对应同一事件的照片。",
+                        "最后，该新闻内容与多家独立新闻媒体报道相一致，故判断为真。"
+                    ]
                 },
                 {
                     id: 4,
@@ -367,105 +393,33 @@
                     source: "Jacob Harper",
                     time: "3小时前",
                     isTrue: true,
-                    image: "image4.png"
-                },
-                {
-                    id: 5,
-                    title: "北极永久冻土加速解冻，释放温室气体量超预期40%",
-                    source: "Liam O'Connor",
-                    time: "6小时前",
-                    isTrue: false,
-                    image: "image5.png"
-                },
-                {
-                    id: 6,
-                    title: "新的基因技术——精准识别和攻击癌细胞",
-                    source: "Claire Bennett",
-                    time: "2小时前",
-                    isTrue: true,
-                    image: "image6.png"
-                },
-                {
-                    id: 7,
-                    title: "芬兰试点\"融合课堂\"，学生创造力评估得分提升10%",
-                    source: "Elina Koskinen",
-                    time: "1天前",
-                    isTrue: true,
-                    image: "image7.png"
-                },
-                {
-                    id: 8,
-                    title: "新型环保材料——\"零碳混凝土\"",
-                    source: "Lukas Müller",
-                    time: "2天前",
-                    isTrue: false,
-                    image: "image8.png"
+                    image: "image4.png",
+                    reasoning: [
+                        "首先，报道的事实与其他来源一致。",
+                        "其次，它的写作风格坚持新闻写作的专业风格。",
+                        "再者，作者是有信誉的新闻记者。",
+                        "最后，这个URL链接到一个有信誉的、知名的新闻网站，故判断为真。"
+                    ]
                 }
-            ];
-            
-            // 判断理由
-            const trueReasons = [
-                [
-                    "首先，新闻报道来源于权威媒体。",
-                    "其次，文中引用的数据可在官方统计年鉴或机构报告中查到。",
-                    "再者，配图经过反向搜索，确实对应同一事件的现场照片。",
-                    "最后，该新闻内容与多家独立新闻媒体报道相一致，故判断为真。"
-                ],
-                [
-                    "首先，新闻发布时间与事件发生时间高度吻合，没有明显延迟或提前。",
-                    "其次，报道语言规范，版式与该媒体以往新闻保持一致。",
-                    "再者，社交媒体上多位当事人或目击者发帖印证了新闻中的细节。",
-                    "最后，该新闻被多个媒体同步报道，故判断为真。"
-                ]
-            ];
-            
-            const falseReasons = [
-                [
-                    "首先，新闻故事是由算法编写和传播的。",
-                    "其次，本文中的引用无法核实。",
-                    "且图片无法通过反向搜索进行验证。",
-                    "最后，这个新闻故事的内容与其他新闻来源不一致，故判断为假。"
-                ],
-                [
-                    "首先，新闻标题过于夸张。",
-                    "其次，该消息来源无法核实。",
-                    "再者，涉及的专家和机构在公开渠道中均查无此人或此机构。",
-                    "最后，与主流媒体报道情况不符，故判断为假。"
-                ]
             ];
             
             let currentNewsIndex = 0;
             let selectedNewsItems = [];
             
-            // 随机选择4篇新闻（2真2假）
-            function selectRandomNews() {
-                // 分离真新闻和假新闻
-                const trueNews = allNewsItems.filter(news => news.isTrue);
-                const falseNews = allNewsItems.filter(news => !news.isTrue);
-                
-                // 随机选择2篇真新闻和2篇假新闻
-                const selectedTrue = getRandomItems(trueNews, 2);
-                const selectedFalse = getRandomItems(falseNews, 2);
-                
-                // 合并并随机排序
-                selectedNewsItems = [...selectedTrue, ...selectedFalse];
-                shuffleArray(selectedNewsItems);
-                
-                // 为每篇新闻随机分配判断理由
-                selectedNewsItems.forEach((news, index) => {
-                    if (news.isTrue) {
-                        news.reasoning = getRandomItems(trueReasons, 1)[0];
-                    } else {
-                        news.reasoning = getRandomItems(falseReasons, 1)[0];
-                    }
-                });
+            // 显示通知
+            function showNotification(message) {
+                notification.textContent = message;
+                notification.style.display = 'block';
+                setTimeout(() => {
+                    notification.style.display = 'none';
+                }, 3000);
             }
             
-            // 从数组中随机选择指定数量的元素
-            function getRandomItems(array, count) {
-                const shuffled = [...array];
-                shuffleArray(shuffled);
-                return shuffled.slice(0, count);
+            // 随机选择4篇新闻
+            function selectRandomNews() {
+                // 随机打乱数组
+                selectedNewsItems = [...allNewsItems];
+                shuffleArray(selectedNewsItems);
             }
             
             // 随机打乱数组
@@ -513,6 +467,13 @@
                     li.textContent = reason;
                     thinkingList.appendChild(li);
                 });
+                
+                // 如果是最后一个新闻，更改按钮文本
+                if (currentNewsIndex === selectedNewsItems.length - 1) {
+                    nextButton.textContent = "完成体验";
+                } else {
+                    nextButton.textContent = "下一个";
+                }
             }
             
             // 开始体验按钮点击事件
@@ -533,11 +494,19 @@
             
             // 下一个按钮点击事件
             nextButton.addEventListener('click', function() {
-                currentNewsIndex = (currentNewsIndex + 1) % selectedNewsItems.length;
-                updateNewsContent();
+                if (currentNewsIndex < selectedNewsItems.length - 1) {
+                    currentNewsIndex++;
+                    updateNewsContent();
+                } else {
+                    // 如果是最后一个新闻，显示通知并返回首页
+                    showNotification("体验已完成！感谢您使用DeepTruth系统");
+                    setTimeout(() => {
+                        judgePage.style.display = 'none';
+                        welcomePage.style.display = 'block';
+                    }, 1000);
+                }
             });
         });
     </script>
 </body>
-
 </html>
