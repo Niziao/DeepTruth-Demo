@@ -343,64 +343,95 @@
             const judgmentResult = document.getElementById('judgmentResult');
             const thinkingList = document.getElementById('thinkingList');
             
-            // 所有新闻数据
+            // 所有新闻数据 - 不包含真假属性
             const allNewsItems = [
                 {
                     id: 1,
                     title: "当太阳消失时，一块巨大的水晶将取而代之",
                     source: "Jill Kiedaisch",
                     time: "37分钟前",
-                    isTrue: false,
-                    image: "image1.png",
-                    reasoning: [
-                        "首先，新闻故事是由算法编写和传播的。",
-                        "其次，本文中的引用无法核实。",
-                        "且图片无法通过反向搜索进行验证。",
-                        "最后，这个新闻故事的内容与其他新闻来源不一致，故判断为假。"
-                    ]
+                    image: "image1.png"
                 },
                 {
                     id: 2,
                     title: "科学家在南极洲发现特别的结构，可能正在改变全球气候",
                     source: "Lena Morozov",
                     time: "18分钟前",
-                    isTrue: false,
-                    image: "image2.png",
-                    reasoning: [
-                        "首先，从其他来源找不到同一问题的报道。",
-                        "其次，它的写作风格不坚持新闻写作的专业风格。",
-                        "再者，在网上找不到关于作者的任何信息。",
-                        "最后，文章中有多个标点、拼写和语法错误，故判断为假。"
-                    ]
+                    image: "image2.png"
                 },
                 {
                     id: 3,
                     title: "\"只在你眨眼时发光\"的低能耗屏幕——科技公司开始测试",
                     source: "Clara Nguyen",
                     time: "27分钟前",
-                    isTrue: true,
-                    image: "image3.png",
-                    reasoning: [
-                        "首先，作者是经过验证的专业新闻记者。",
-                        "其次，文中引用的数据可在官方统计年鉴或机构报告中查到。",
-                        "再者，配图经过反向搜索，确实对应同一事件的照片。",
-                        "最后，该新闻内容与多家独立新闻媒体报道相一致，故判断为真。"
-                    ]
+                    image: "image3.png"
                 },
                 {
                     id: 4,
                     title: "太空望远镜发现\"粉红色小行星\"",
                     source: "Jacob Harper",
                     time: "3小时前",
-                    isTrue: true,
-                    image: "image4.png",
-                    reasoning: [
-                        "首先，报道的事实与其他来源一致。",
-                        "其次，它的写作风格坚持新闻写作的专业风格。",
-                        "再者，作者是有信誉的新闻记者。",
-                        "最后，这个URL链接到一个有信誉的、知名的新闻网站，故判断为真。"
-                    ]
+                    image: "image4.png"
+                },
+                {
+                    id: 5,
+                    title: "北极永久冻土加速解冻，释放温室气体量超预期40%",
+                    source: "Liam O'Connor",
+                    time: "6小时前",
+                    image: "image5.png"
+                },
+                {
+                    id: 6,
+                    title: "新的基因技术——精准识别和攻击癌细胞",
+                    source: "Claire Bennett",
+                    time: "2小时前",
+                    image: "image6.png"
+                },
+                {
+                    id: 7,
+                    title: "芬兰试点\"融合课堂\"，学生创造力评估得分提升10%",
+                    source: "Elina Koskinen",
+                    time: "1天前",
+                    image: "image7.png"
+                },
+                {
+                    id: 8,
+                    title: "新型环保材料——\"零碳混凝土\"",
+                    source: "Lukas Müller",
+                    time: "2天前",
+                    image: "image8.png"
                 }
+            ];
+            
+            // 思索过程库 - 保持原来的2个思索过程
+            const trueReasoning = [
+                [
+                    "首先，作者是经过验证的专业新闻记者。",
+                    "其次，文中引用的数据可在官方统计年鉴或机构报告中查到。",
+                    "再者，配图经过反向搜索，确实对应同一事件的照片。",
+                    "最后，该新闻内容与多家独立新闻媒体报道相一致，故判断为真。"
+                ],
+                [
+                    "首先，报道的事实与其他来源一致。",
+                    "其次，它的写作风格坚持新闻写作的专业风格。",
+                    "再者，作者是有信誉的新闻记者。",
+                    "最后，这个URL链接到一个有信誉的、知名的新闻网站，故判断为真。"
+                ]
+            ];
+            
+            const falseReasoning = [
+                [
+                    "首先，新闻故事是由算法编写和传播的。",
+                    "其次，本文中的引用无法核实。",
+                    "且图片无法通过反向搜索进行验证。",
+                    "最后，这个新闻故事的内容与其他新闻来源不一致，故判断为假。"
+                ],
+                [
+                    "首先，从其他来源找不到同一问题的报道。",
+                    "其次，它的写作风格不坚持新闻写作的专业风格。",
+                    "再者，在网上找不到关于作者的任何信息。",
+                    "最后，文章中有多个标点、拼写和语法错误，故判断为假。"
+                ]
             ];
             
             let currentNewsIndex = 0;
@@ -415,11 +446,49 @@
                 }, 3000);
             }
             
-            // 随机选择4篇新闻
+            // 随机选择4篇新闻，并确保两真两假
             function selectRandomNews() {
+                // 创建新闻副本，避免修改原始数据
+                const newsItemsCopy = allNewsItems.map(item => ({...item}));
+                
                 // 随机打乱数组
-                selectedNewsItems = [...allNewsItems];
-                shuffleArray(selectedNewsItems);
+                shuffleArray(newsItemsCopy);
+                
+                // 只取前4个
+                selectedNewsItems = newsItemsCopy.slice(0, 4);
+                
+                // 为每个新闻随机分配真假，确保两真两假
+                const indices = [0, 1, 2, 3];
+                shuffleArray(indices);
+                
+                // 创建思索过程副本并打乱顺序
+                const availableTrueReasoning = [...trueReasoning];
+                const availableFalseReasoning = [...falseReasoning];
+                shuffleArray(availableTrueReasoning);
+                shuffleArray(availableFalseReasoning);
+                
+                // 前两个设为真，后两个设为假
+                for (let i = 0; i < 2; i++) {
+                    selectedNewsItems[indices[i]].isTrue = true;
+                    // 确保两个真新闻使用不同的思索过程
+                    selectedNewsItems[indices[i]].reasoning = availableTrueReasoning[i];
+                }
+                
+                for (let i = 2; i < 4; i++) {
+                    selectedNewsItems[indices[i]].isTrue = false;
+                    // 确保两个假新闻使用不同的思索过程
+                    selectedNewsItems[indices[i]].reasoning = availableFalseReasoning[i-2];
+                }
+                
+                console.log("本次体验的新闻真假分配:");
+                selectedNewsItems.forEach((news, index) => {
+                    console.log(`新闻${index+1}: ${news.title} - ${news.isTrue ? '真' : '假'}`);
+                });
+                
+                console.log("思索过程分配:");
+                selectedNewsItems.forEach((news, index) => {
+                    console.log(`新闻${index+1}: ${news.isTrue ? '真' : '假'} - 思索过程: ${news.reasoning[0].substring(0, 20)}...`);
+                });
             }
             
             // 随机打乱数组
